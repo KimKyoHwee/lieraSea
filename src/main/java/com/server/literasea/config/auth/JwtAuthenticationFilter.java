@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             if (isPostWordRequest) {  //도메인이 saveWord면
                                 userRepository.findByEmailWithJPQL(id)
                                         .ifPresent(this::saveAuthentication);
-                            } else
+                            } else  //saveWord 요청이 아닐시 원래대로 실행
                             userRepository.findByEmail(id)
                                     .ifPresent(this::saveAuthentication);
                         }));
