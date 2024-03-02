@@ -22,7 +22,7 @@ import static com.server.literasea.exception.UsersExceptionType.NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service
-public class HomeService {
+public class HomeService {  //TODO: 쿼리개선필요
     //repository-----------------------------------------------------------------
     private final UserRepository userRepository;
     private final InventoryRepository inventoryRepository;
