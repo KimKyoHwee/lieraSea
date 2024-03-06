@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
 
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
-    
+
 
     public void checkAccessTokenAndAuthentication(HttpServletRequest request,
                                                   HttpServletResponse response,
@@ -46,30 +46,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
         String method = request.getMethod();
         boolean isPostWordRequest = "POST".equalsIgnoreCase(method) && requestURI.startsWith("/api/v1/word/");
-        //확인완료
         jwtService.extractAccessToken(request)
                 .filter(jwtService::isTokenValid)
                 .ifPresent(accessToken -> jwtService.extractUuid(accessToken)
                         .ifPresent(id -> {
-                            if (isPostWordRequest) {  //도메인이 saveWord면
+                            if (isPostWordRequest) {
                                 userRepository.findByEmailWithJPQL(id)
                                         .ifPresent(this::saveAuthentication);
-                            } else  //saveWord 요청이 아닐시 원래대로 실행
-                            userRepository.findByEmail(id)
-                                    .ifPresent(this::saveAuthentication);
+                            } else
+                                userRepository.findByEmail(id)
+                                        .ifPresent(this::saveAuthentication);
                         }));
         filterChain.doFilter(request, response);
-        jwtService.extractAccessToken(request)
-                .filter(jwtService::isTokenValid)
-                .ifPresent(accessToken -> jwtService.extractUuid(accessToken)
-                        .ifPresent(id -> userRepository.findByEmail(id)
-                                .ifPresent(this::saveAuthentication)));
-
-        filterChain.doFilter(request, response);
-
-
-
-
     }
 
 
