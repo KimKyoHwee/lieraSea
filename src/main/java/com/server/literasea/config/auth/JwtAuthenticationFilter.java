@@ -59,8 +59,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         }));
         filterChain.doFilter(request, response);
     }
+    /*
+    public void checkAccessTokenAndAuthentication(HttpServletRequest request,
+                                                  HttpServletResponse response,
+                                                  FilterChain filterChain) throws ServletException, IOException {
+        log.info("checkAccessTokenAndAuthentication() 호출");
+        jwtService.extractAccessToken(request)
+                .filter(jwtService::isTokenValid)
+                .ifPresent(accessToken -> jwtService.extractUuid(accessToken)
+                        .ifPresent(id -> userRepository.findByEmail(id)
+                                .ifPresent(this::saveAuthentication)));
 
-
+        filterChain.doFilter(request, response);
+    }
+     */
 
     public void saveAuthentication(Users users) {
 
