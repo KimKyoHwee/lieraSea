@@ -38,28 +38,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
 
-    public void checkAccessTokenAndAuthentication(HttpServletRequest request,
-                                                  HttpServletResponse response,
-                                                  FilterChain filterChain) throws ServletException, IOException {
-        log.info("checkAccessTokenAndAuthentication() 호출");
-        //요청오는 도메인이 saveWord인지 확인
-        String requestURI = request.getRequestURI();
-        String method = request.getMethod();
-        boolean isPostWordRequest = "POST".equalsIgnoreCase(method) && requestURI.startsWith("/api/v1/word/");
-        jwtService.extractAccessToken(request)
-                .filter(jwtService::isTokenValid)
-                .ifPresent(accessToken -> jwtService.extractUuid(accessToken)
-                        .ifPresent(id -> {
-                            if (isPostWordRequest) {
-                                userRepository.findByEmailWithJPQL(id)
-                                        .ifPresent(this::saveAuthentication);
-                            } else
-                                userRepository.findByEmail(id)
-                                        .ifPresent(this::saveAuthentication);
-                        }));
-        filterChain.doFilter(request, response);
-    }
-    /*
+//    public void checkAccessTokenAndAuthentication(HttpServletRequest request,
+//                                                  HttpServletResponse response,
+//                                                  FilterChain filterChain) throws ServletException, IOException {
+//        log.info("checkAccessTokenAndAuthentication() 호출");
+//        //요청오는 도메인이 saveWord인지 확인
+//        String requestURI = request.getRequestURI();
+//        String method = request.getMethod();
+//        boolean isPostWordRequest = "POST".equalsIgnoreCase(method) && requestURI.startsWith("/api/v1/word/");
+//        jwtService.extractAccessToken(request)
+//                .filter(jwtService::isTokenValid)
+//                .ifPresent(accessToken -> jwtService.extractUuid(accessToken)
+//                        .ifPresent(id -> {
+//                            if (isPostWordRequest) {
+//                                userRepository.findByEmailWithJPQL(id)
+//                                        .ifPresent(this::saveAuthentication);
+//                            } else
+//                                userRepository.findByEmail(id)
+//                                        .ifPresent(this::saveAuthentication);
+//                        }));
+//        filterChain.doFilter(request, response);
+//    }
+
     public void checkAccessTokenAndAuthentication(HttpServletRequest request,
                                                   HttpServletResponse response,
                                                   FilterChain filterChain) throws ServletException, IOException {
@@ -72,7 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-     */
+
 
     public void saveAuthentication(Users users) {
 
